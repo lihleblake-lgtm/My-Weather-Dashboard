@@ -1,69 +1,60 @@
 import { useState } from "react";
 import "./App.css";
+
 const API_KEY = import.meta.env.VITE_API_KEY;
+
 function App() {
   const [city, setCity] = useState("");
-  const [weather, setWeather] = useState(null);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState("");
+
   const fetchWeather = async () => {
     if (!city) return;
-    const res = await fetch(
-      `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${API_KEY}`
-    );
-    const data = await res.json();
-    setWeather(data);
+
+    try {
+      const res = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`
+      );
+
+      if (!res.ok) throw new Error("City not found");
+
+      const json = await res.json();
+      setData(json);
+      setError("");
+    } catch (err) {
+      setError("City not found");
+      setData(null);
+    }
   };
-  const getIcon = (main) => {
-    if (main === "Clouds") return "/src/assets/icons/cloud.png";
-    if (main === "Rain") return "/src/assets/icons/rain.png";
-    if (main === "Thunderstorm") return "/src/assets/icons/thunder.png";
-    return "/src/assets/icons/sun.png";
-  };
+
   return (
     <div className="app">
       <div className="card">
-        {/* SEARCH */}
         <div className="search">
           <input
+            type="text"
             placeholder="Search city"
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
           <button onClick={fetchWeather}>🔍</button>
         </div>
-        {weather && (
+
+        {error && <p className="error">{error}</p>}
+
+        {data && (
           <>
-            {/* LOCATION */}
-            <p className="location">📍 {weather.city.name}</p>
-            {/* CURRENT WEATHER */}
-            <div className="current">
-              <img
-                src={getIcon(weather.list[0].weather[0].main)}
-                alt="weather"
-              />
-              <h1>{Math.round(weather.list[0].main.temp)}°C</h1>
-              <p>{weather.list[0].weather[0].main}</p>
-            </div>
-            {/* DETAILS */}
+            <h2>{data.name}</h2>
+            <img
+              src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`}
+              alt="weather"
+            />
+            <h1>{Math.round(data.main.temp)}°C</h1>
+            <p>{data.weather[0].description}</p>
+
             <div className="details">
-              <div>
-                💧
-                <span>{weather.list[0].main.humidity}%</span>
-                <small>Humidity</small>
-              </div>
-              <div>
-                🌬
-                <span>{weather.list[0].wind.speed} km/h</span>
-                <small>Wind</small>
-              </div>
-            </div>
-            {/* FORECAST */}
-            <div className="forecast">
-              {weather.list.slice(8, 40, 8).map((day, i) => (
-                <div className="forecast-card" key={i}>
-                  <img src={getIcon(day.weather[0].main)} />
-                  <p>{Math.round(day.main.temp)}°</p>
-                </div>
-              ))}
+              <p>Humidity: {data.main.humidity}%</p>
+              <p>Wind: {data.wind.speed} m/s</p>
             </div>
           </>
         )}
@@ -71,4 +62,5 @@ function App() {
     </div>
   );
 }
+
 export default App;
