@@ -1,42 +1,83 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+app {
+  min-height: 100vh;
+  background: linear-gradient(#8ecae6, #dbeafe);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.card {
+  width: 320px;
+  padding: 20px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(15px);
+  color: white;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+/* SEARCH */
+.search {
+  display: flex;
+  padding: 10px;
+  border-radius: 25px;
+  background: rgba(255,255,255,0.3);
+}
+.search input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+}
+.search button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: white;
+}
+/* LOCATION */
+.location {
+  margin-top: 10px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+/* CURRENT */
+.current {
+  text-align: center;
+  margin: 20px 0;
+}
+.current img {
+  width: 90px;
+}
+.current h1 {
+  font-size: 48px;
+}
+/* DETAILS */
+.details {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.details div {
+  text-align: center;
+  font-size: 14px;
+}
+.details span {
+  display: block;
+  font-weight: bold;
+}
+/* FORECAST */
+.forecast {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.forecast-card {
+  width: 60px;
+  padding: 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.25);
   text-align: center;
 }
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+.forecast-card img {
+  width: 30px;
 }

@@ -1,35 +1,74 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import { useState } from "react";
+import "./App.css";
+const API_KEY = import.meta.env.VITE_API_KEY;
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [city, setCity] = useState("");
+  const [weather, setWeather] = useState(null);
+  const fetchWeather = async () => {
+    if (!city) return;
+    const res = await fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${API_KEY}`
+    );
+    const data = await res.json();
+    setWeather(data);
+  };
+  const getIcon = (main) => {
+    if (main === "Clouds") return "/src/assets/icons/cloud.png";
+    if (main === "Rain") return "/src/assets/icons/rain.png";
+    if (main === "Thunderstorm") return "/src/assets/icons/thunder.png";
+    return "/src/assets/icons/sun.png";
+  };
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
+    <div className="app">
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+        {/* SEARCH */}
+        <div className="search">
+          <input
+            placeholder="Search city"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+          />
+          <button onClick={fetchWeather}>🔍</button>
+        </div>
+        {weather && (
+          <>
+            {/* LOCATION */}
+            <p className="location">📍 {weather.city.name}</p>
+            {/* CURRENT WEATHER */}
+            <div className="current">
+              <img
+                src={getIcon(weather.list[0].weather[0].main)}
+                alt="weather"
+              />
+              <h1>{Math.round(weather.list[0].main.temp)}°C</h1>
+              <p>{weather.list[0].weather[0].main}</p>
+            </div>
+            {/* DETAILS */}
+            <div className="details">
+              <div>
+                💧
+                <span>{weather.list[0].main.humidity}%</span>
+                <small>Humidity</small>
+              </div>
+              <div>
+                🌬
+                <span>{weather.list[0].wind.speed} km/h</span>
+                <small>Wind</small>
+              </div>
+            </div>
+            {/* FORECAST */}
+            <div className="forecast">
+              {weather.list.slice(8, 40, 8).map((day, i) => (
+                <div className="forecast-card" key={i}>
+                  <img src={getIcon(day.weather[0].main)} />
+                  <p>{Math.round(day.main.temp)}°</p>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
-
-export default App
+export default App;
