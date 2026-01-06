@@ -1,3 +1,10 @@
+return (
+  <div style={{ color: "red", fontSize: "30px" }}>
+    APP IS RENDERING
+  </div>
+);
+
+
 import { useState } from "react";
 import "./App.css";
 
